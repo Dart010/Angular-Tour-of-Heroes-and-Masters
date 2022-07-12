@@ -1,0 +1,12 @@
+<!-- <p>master-detail works!</p> -->
+
+<div *ngIf="master">
+    <h2>{{master.name | uppercase}} Details</h2>
+    <div><span>id: </span>{{master.id}}</div>
+    <div>
+      <label for="hero-name">Master name: </label>
+      <input id="hero-name" [(ngModel)]="master.name" placeholder="Master name"/>
+    </div>
+    <button type="button" (click)="goBack()">go back</button>
+    <button type="button" (click)="save()">save</button>
+</div>

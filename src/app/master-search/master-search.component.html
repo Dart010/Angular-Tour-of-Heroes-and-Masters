@@ -1,0 +1,12 @@
+<div id="search-component">
+  <label for="search-box">Master Search</label>
+  <input id="search-box" [(ngModel)]="searchTerm" (input)="search()" />
+  
+  <ul class="search-result">
+    <li *ngFor="let master of masters">
+      <a routerLink="/master/detail/{{master.id}}">
+        {{master.name}}
+      </a>
+    </li>
+  </ul> 
+</div>

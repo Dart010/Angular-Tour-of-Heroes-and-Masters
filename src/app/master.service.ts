@@ -20,33 +20,27 @@ export class MasterService {
 
   constructor(private messageService: MessageService) { }
 
-  getMasters() : Master[] {  
-    // daca comentez linia urmatoare nu o sa se mai reincarce masters in local storage cand dau refresh 
-    // localStorage.setItem("masters", JSON.stringify(this.masters)); 
-
-    // daca folosesc conditia urmatoare atunci orice master il sterg va fi adaugat inapoi in masters dupa
-    // ce se da refresh la pagina => functia de deleteMaster nu ar mai merge
-    // if(localStorage["masters"] === null) {
-    //   localStorage.setItem("masters", JSON.stringify(this.masters)); 
-    // }
-   
+  fetchMasters() {
     if(localStorage.getItem("masters") === null) {  
       return [];
     }
-    this.log('fetched masters');
     return JSON.parse(localStorage.getItem("masters") as string);
   }
 
+  getMasters() : Master[] {  
+    this.log('fetched masters');
+    return this.fetchMasters();
+  }
+
   getMaster(id: number): Master {     // metoda pentru obtinerea id-ului unui master selectat
-    var masters = JSON.parse(localStorage.getItem("masters") as string);
+    var masters = this.getMasters();
     const master = masters.find((m: Master) => m.id === id)!;
-    console.log(master);
     this.log(`fetched master id=${id}`);
     return master;
   }
 
-  addMaster(newName: string): Master[] {
-    var masters = JSON.parse(localStorage.getItem("masters") as string);
+  addMaster(newName: string): void {
+    var masters = this.getMasters();
     var newID = 0;
 
     var lastElem = masters[masters.length - 1];   // preluam ultimul element din masters
@@ -63,7 +57,7 @@ export class MasterService {
 
     this.log(`added master w/ id=${newID}`);
     localStorage.setItem("masters", JSON.stringify(masters));
-    return JSON.parse(localStorage.getItem("masters") as string);
+    // return JSON.parse(localStorage.getItem("masters") as string);
   }
 
   // getID() : number {
@@ -71,7 +65,7 @@ export class MasterService {
   // }
 
   deleteMaster(id: number): void {
-    var masters = JSON.parse(localStorage.getItem("masters") as string);
+    var masters = this.getMasters();
     var newMasters: Master[] = [];
 
     // se poate si cu forEach
@@ -88,8 +82,8 @@ export class MasterService {
   }
 
   updateMaster(master: Master): void {
-    var masters = JSON.parse(localStorage.getItem("masters") as string);
-    
+    var masters = this.getMasters();
+
     const masterIndex = masters.findIndex((m: Master) => m.id == master.id);
     if (masterIndex != -1) {
       masters[masterIndex].name = master.name;
@@ -115,4 +109,3 @@ export class MasterService {
     this.messageService.add(`MasterService: ${message}`);
   }
 }
- 
